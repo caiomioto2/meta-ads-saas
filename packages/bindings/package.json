@@ -1,0 +1,34 @@
+{
+  "name": "@decocms/bindings",
+  "version": "1.0.1-alpha.12",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.20.2",
+    "zod": "^3.25.76",
+    "zod-from-json-schema": "^0.0.5",
+    "zod-to-json-schema": "3.25.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./collections": "./src/well-known/collections.ts",
+    "./llm": "./src/well-known/language-model.ts",
+    "./connection": "./src/core/connection.ts",
+    "./client": "./src/core/client/index.ts",
+    "./mcp": "./src/well-known/mcp.ts",
+    "./agent": "./src/well-known/agent.ts",
+    "./workflow": "./src/well-known/workflow.ts"
+  },
+  "devDependencies": {
+    "vitest": "3.2.4"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

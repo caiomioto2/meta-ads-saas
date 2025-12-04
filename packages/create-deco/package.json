@@ -1,0 +1,31 @@
+{
+  "name": "create-deco",
+  "version": "1.1.4",
+  "description": "Create a new deco app",
+  "main": "index.js",
+  "bin": {
+    "create-deco": "./index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "create",
+    "deco",
+    "app",
+    "template",
+    "scaffolding",
+    "cli"
+  ],
+  "author": "Deco team",
+  "license": "MIT",
+  "dependencies": {
+    "deco-cli": "^0.26.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

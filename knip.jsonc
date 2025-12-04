@@ -1,0 +1,50 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "workspaces": {
+    ".": {
+      "entry": ["scripts/**/*.ts"],
+      "project": ["scripts/**/*.ts"]
+    },
+    "apps/web": {
+      "ignoreDependencies": [
+        // @hookform/resolvers have ajv deps as optional peer dependencies
+        "ajv-errors",
+        "ajv-formats",
+        "ajv"
+      ]
+    },
+    "apps/outbound": {
+      "ignoreDependencies": ["cloudflare"]
+    },
+    "packages/runtime": {
+      "entry": ["scripts/generate-json-schema.ts"]
+    },
+    "packages/ui": {
+      "ignore": ["src/styles/global.css"]
+    },
+    "packages/sdk": {
+      // TODO: Check if we really need this observability folder
+      "ignore": ["src/observability/**/*"],
+      "ignoreDependencies": ["@microlabs/otel-cf-workers"]
+    },
+    "apps/mesh": {
+      "entry": ["src/web/index.tsx", "migrations/**/*.ts", "scripts/**/*.ts"]
+    }
+  },
+  "ignore": [
+    "**/*.d.ts",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/test/**",
+    "**/dist/**",
+    "**/node_modules/**",
+    ".github/workflows/publish-runtime-npm.yaml",
+    ".github/workflows/publish-bindings.yml",
+    ".github/workflows/publish-vite-plugin-npm.yaml"
+  ],
+  "ignoreDependencies": ["@types/*"],
+  // TODO(@camudo): Remove this config once I fix all unused type exports
+  "ignoreIssues": {
+    "**/*": ["types"]
+  }
+}

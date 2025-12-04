@@ -1,0 +1,93 @@
+{
+  "compilerOptions": {
+    // Deno-like strict type checking
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noImplicitOverride": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "strictNullChecks": true,
+    "useUnknownInCatchVariables": true,
+    "disableSizeLimit": true,
+    // Module system
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "allowImportingTsExtensions": true,
+    "moduleDetection": "force",
+    // Output configuration
+    "noEmit": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    // JavaScript support
+    "allowJs": true,
+    "checkJs": false,
+    // JSX configuration (React-like as in Deno)
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    // Additional type checking
+    "noFallthroughCasesInSwitch": false,
+    "noImplicitReturns": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noUncheckedIndexedAccess": false,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "noErrorTruncation": false,
+    "noStrictGenericChecks": false,
+    "suppressExcessPropertyErrors": false,
+    "suppressImplicitAnyIndexErrors": false,
+    "keyofStringsOnly": false,
+    // Library files (adapted for Node.js instead of Deno)
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    // Path resolution
+    "baseUrl": ".",
+    "paths": {
+      "@deco/*": ["packages/*/src"],
+      "@deco/sdk": ["packages/sdk/src/index.ts"],
+      "@deco/sdk/*": ["packages/sdk/src/*"],
+      "@deco/ui": ["packages/ui/src/index.ts"],
+      "@deco/ui/*": ["packages/ui/src/*"],
+      "@decocms/*": ["packages/*/src"],
+      "@decocms/sdk": ["packages/sdk/src/index.ts"],
+      "@decocms/sdk/*": ["packages/sdk/src/*"],
+      "@decocms/ui": ["packages/ui/src/index.ts"],
+      "@decocms/ui/*": ["packages/ui/src/*"]
+    },
+    // Experimental decorators for compatibility
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    // Misc
+    "forceConsistentCasingInFileNames": true,
+    "verbatimModuleSyntax": false,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "tsBuildInfoFile": ".tsbuildinfo"
+  },
+  "include": ["apps/**/*", "packages/**/*", "plugins/**/*"],
+  "exclude": [
+    "apps/mesh/**",
+    "node_modules",
+    "apps/*/node_modules",
+    "packages/*/node_modules",
+    "**/dist",
+    "**/build",
+    "**/.wrangler",
+    "apps/web/public/**",
+    "packages/runtime/scripts/generate-cf-imports.ts",
+    "packages/runtime/scripts/generate-json-schema.ts",
+    "docs/server/**",
+    "plugins/*",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/test/**",
+    "**/tests/**"
+  ]
+}

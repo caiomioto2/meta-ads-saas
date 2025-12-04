@@ -1,0 +1,15 @@
+{
+  "name": "@decocms/vite-plugin",
+  "version": "1.0.0-alpha.1",
+  "type": "module",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "vite": "^7.2.1",
+    "@cloudflare/vite-plugin": "^1.13.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

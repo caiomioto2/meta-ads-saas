@@ -1,0 +1,92 @@
+import type { ToolBinder } from "@/core/define-tool";
+import type z from "zod";
+import type { MCPMeshTools } from "./index.ts";
+
+export type MCPClient<
+  TDefinition extends readonly ToolBinder<z.ZodTypeAny, z.ZodTypeAny>[],
+> = {
+  [K in TDefinition[number] as K["name"]]: K extends ToolBinder<
+    infer TInput,
+    infer TReturn
+  >
+    ? (params: z.infer<TInput>, init?: RequestInit) => Promise<z.infer<TReturn>>
+    : never;
+};
+
+export type MeshClient = MCPClient<MCPMeshTools>;
+
+export const UNKNOWN_CONNECTION_ID = "UNKNOWN_CONNECTION_ID";
+
+const parseSSEResponseAsJson = async (response: Response) => {
+  /**
+   * example:
+   * 'event: message\ndata: {"result":{"content":[{"type":"text","text":"{\\"organizations\\":[{\\"id\\":\\"1\\",\\"name\\":\\"Organization 1\\",\\"slug\\":\\"organization-1\\",\\"createdAt\\":\\"2025-11-03T18:12:46.700Z\\"}]}"}],"structuredContent":{"organizations":[{"id":"1","name":"Organization 1","slug":"organization-1","createdAt":"2025-11-03T18:12:46.700Z"}]}},"jsonrpc":"2.0","id":1}\n\n'
+   */
+  const raw = await response.text();
+  const data = raw.split("\n").find((line) => line.startsWith("data: "));
+
+  if (!data) {
+    throw new Error("No data received from the server");
+  }
+
+  const json = JSON.parse(data.replace("data: ", ""));
+
+  return json;
+};
+
+/**
+ * Type for a generic tool caller function
+ */
+export type ToolCaller = (toolName: string, args: unknown) => Promise<unknown>;
+
+/**
+ * Create a unified tool caller
+ *
+ * - If connectionId is provided: routes to /mcp/:connectionId (connection-specific tools)
+ * - If connectionId is omitted/null: routes to /mcp (mesh API tools)
+ *
+ * This abstracts the routing logic so hooks don't need to know if they're
+ * calling mesh tools or connection-specific tools.
+ */
+export function createToolCaller(connectionId?: string): ToolCaller {
+  if (connectionId === UNKNOWN_CONNECTION_ID) {
+    return async () => {};
+  }
+
+  const endpoint = connectionId ? `/mcp/${connectionId}` : "/mcp";
+
+  return async <T extends Record<string, unknown> = Record<string, unknown>>(
+    toolName: string,
+    args: unknown,
+  ): Promise<T> => {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: 1,
+        method: "tools/call",
+        params: {
+          name: toolName,
+          arguments: args,
+        },
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json, text/event-stream",
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const json = await parseSSEResponseAsJson(response);
+
+    if (json.result?.isError) {
+      throw new Error(json.result.content?.[0]?.text || "Tool call failed");
+    }
+
+    return json.result?.structuredContent || json.result;
+  };
+}
